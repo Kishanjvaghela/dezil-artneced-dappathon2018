@@ -22,8 +22,7 @@ Ensures equality for all.Even the admin or the creator cannot tamper the data.Tr
 3. All transactions are open and transparent
 
 ## Application Flow
-![alt text](https://raw.githubusercontent.com/Kishanjvaghela/dezil-artneced-dappathon2018/master/dezil-artneced-dappathon2018/flow.png)
-<image src = "https://raw.githubusercontent.com/Kishanjvaghela/dezil-artneced-dappathon2018/master/dezil-artneced-dappathon2018/flow.png">
+<image src = "https://raw.githubusercontent.com/Kishanjvaghela/dezil-artneced-dappathon2018/master/flow.png">
 
 
 ### Architechture Modules
