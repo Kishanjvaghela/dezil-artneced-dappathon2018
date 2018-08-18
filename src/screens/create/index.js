@@ -19,8 +19,8 @@ class CreateScreen extends Component {
     const { title, number, taxType, amount, filterType } = this.state;
     createTender(number, taxType, filterType, amount)
       .then(data => {
-        DataBase.createTender(number, data);
-        alert(data);
+        DataBase.createTender(number, data.address);
+        alert(data.txHash);
       })
       .catch(e => alert(e.toString()));
   };
