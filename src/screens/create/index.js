@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { createTender } from '../../interact';
+import { createTender } from '../../Admin';
 import DataBase from '../../database';
 class CreateScreen extends Component {
   constructor(props) {
