@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import ReactTable from 'react-table';
+import { Button } from 'reactstrap';
 import 'react-table/react-table.css';
 import DataBase from '../../database';
-import { getTenderDetails } from '../../Admin';
+import { getTenderDetails, closeTender } from '../../Admin';
 
 class Tenders extends Component {
   constructor(props) {
@@ -28,6 +29,17 @@ class Tenders extends Component {
         .catch(e => console.error(e));
     }
   }
+
+  closeTenderClick = address => {
+    console.log(address);
+    closeTender(address)
+      .then(data => {
+        alert('Success');
+      })
+      .catch(error => {
+        alert(JSON.stringify(error));
+      });
+  };
   render() {
     const columns = [
       {
@@ -57,6 +69,20 @@ class Tenders extends Component {
       {
         Header: 'Duration (In month)',
         accessor: 'duration'
+      },
+      {
+        Header: 'Action',
+        accessor: 'tenderAddress',
+        Cell: props => (
+          <Button
+            color="danger"
+            onClick={() => {
+              this.closeTenderClick(props.value);
+            }}
+          >
+            Close
+          </Button>
+        )
       }
     ];
     return (

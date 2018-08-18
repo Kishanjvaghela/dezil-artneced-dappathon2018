@@ -67,6 +67,7 @@ const getTenderDetails = tenderAddress => {
         return reject(err);
       } else {
         return resolve({
+          tenderAddress,
           tenderid: data[0],
           title: data[1],
           tenderCategory: data[2],
