@@ -58,8 +58,10 @@
     "react": "^15.4.2",
     "react-chartjs": "^1.2.0",
     "react-dom": "^15.4.2",
+    "react-modal": "^3.5.1",
     "react-table": "^6.8.6",
-    "reactstrap": "^6.4.0"
+    "reactstrap": "^6.4.0",
+    "sweetalert-react": "^0.4.11"
   },
   "scripts": {
     "start": "node scripts/start.js",

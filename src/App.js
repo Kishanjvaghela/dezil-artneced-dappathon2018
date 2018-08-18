@@ -58,7 +58,7 @@ class App extends Component {
         case 2:
           return <CreateScreen />;
         case 3:
-          return <TendersScreen />;
+          return <TendersScreen user={user} />;
         case 4:
           return <ClosedTenderScreen />;
         case 5:

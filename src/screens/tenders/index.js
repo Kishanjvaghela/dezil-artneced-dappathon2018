@@ -1,17 +1,24 @@
 import React, { Component } from 'react';
 import ReactTable from 'react-table';
-import { Button } from 'reactstrap';
+import ReactModal from 'react-modal';
+import { Button, Form, FormGroup, Label, Input } from 'reactstrap';
 import 'react-table/react-table.css';
 import DataBase from '../../database';
 import { getTenderDetails, closeTender } from '../../Admin';
+import { submitBid } from '../../Agents';
 
 class Tenders extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      tenders: []
+      tenders: [],
+      show: false,
+      bidAmount: 0,
+      duration: 0,
+      address: ''
     };
+    this.toggle = this.toggle.bind(this);
   }
   componentDidMount() {
     const p = DataBase.getTenders();
@@ -32,6 +39,7 @@ class Tenders extends Component {
 
   closeTenderClick = address => {
     console.log(address);
+
     closeTender(address)
       .then(data => {
         alert('Success');
@@ -40,15 +48,32 @@ class Tenders extends Component {
         alert(JSON.stringify(error));
       });
   };
+
+  submitBidClick = address => {
+    console.log('submit bid clicked');
+    this.setState({ show: true, address });
+  };
+
+  renderAlert() {
+    return (
+      <div>
+        <Label for="title">Bid Amount</Label>
+        <input />
+      </div>
+    );
+  }
+  toggle() {
+    this.setState({
+      show: !this.state.show,
+      address: ''
+    });
+  }
+
   render() {
     const columns = [
       {
         Header: 'Tender title',
         accessor: 'title'
-      },
-      {
-        Header: 'Amount',
-        accessor: 'tenderAmount'
       },
       {
         Header: 'Tender Category',
@@ -77,10 +102,14 @@ class Tenders extends Component {
           <Button
             color="danger"
             onClick={() => {
-              this.closeTenderClick(props.value);
+              if (this.props.user.type === 1) {
+                this.closeTenderClick(props.value);
+              } else {
+                this.submitBidClick(props.value);
+              }
             }}
           >
-            Close
+            Pich
           </Button>
         )
       }
@@ -89,7 +118,98 @@ class Tenders extends Component {
       <div className="pure-g">
         <div className="pure-u-1-1">
           <h1>Tenders</h1>
-          {/* <p>{JSON.stringify(DataBase.getTenders())}</p> */}
+          <div>
+            <ReactModal isOpen={this.state.show}>
+              <Form>
+                <FormGroup>
+                  <Label for="title">Title</Label>
+                  <Input
+                    disabled
+                    id="title"
+                    placeholder="Enter tender title"
+                    value={this.state.title}
+                  />
+                </FormGroup>
+                <FormGroup>
+                  <Label for="tenderCategory">Tender Category</Label>
+                  <Input
+                    disabled
+                    type="select"
+                    name="select"
+                    id="tenderCategory"
+                  >
+                    <option>Manufacturing</option>
+                    <option>IT service</option>
+                    <option>Schools</option>
+                    <option>Restaurant</option>
+                    <option>Others</option>
+                  </Input>
+                </FormGroup>
+                <FormGroup>
+                  <Label for="desc">Description</Label>
+                  <Input
+                    disabled
+                    id="desc"
+                    placeholder="Enter tender description"
+                    value={this.state.desc}
+                  />
+                </FormGroup>
+                <FormGroup>
+                  <Label for="tenderAmount">Amount</Label>
+                  <Input
+                    id="tenderAmount"
+                    placeholder="Enter tender amount"
+                    value={this.state.bidAmount}
+                    onChange={evt => {
+                      return this.setState({ bidAmount: evt.target.value });
+                    }}
+                  />
+                </FormGroup>
+                <FormGroup>
+                  <Label for="desc">Duration</Label>
+                  <Input
+                    id="desc"
+                    placeholder="Enter tender duration in month"
+                    value={this.state.duration}
+                    onChange={evt => {
+                      return this.setState({ duration: evt.target.value });
+                    }}
+                  />
+                </FormGroup>
+                <Button
+                  onClick={() => {
+                    const { address, bidAmount, duration } = this.state;
+                    console.log(this.props.user);
+
+                    submitBid(
+                      address,
+                      parseInt(bidAmount),
+                      this.props.user.userId,
+                      'tendertype',
+                      10,
+                      parseInt(duration)
+                    )
+                      .then(data => {
+                        this.setState({ show: false });
+                      })
+                      .catch(error => {
+                        alert(JSON.stringify(error));
+                      });
+                  }}
+                >
+                  Pich
+                </Button>{' '}
+                {'    '}
+                <Button
+                  onClick={() => {
+                    this.setState({ show: false });
+                  }}
+                >
+                  Close
+                </Button>
+              </Form>
+            </ReactModal>
+          </div>
           <ReactTable data={this.state.tenders} columns={columns} />
         </div>
       </div>
