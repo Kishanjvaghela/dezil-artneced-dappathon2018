@@ -124,7 +124,7 @@ class Tenders extends Component {
               <div>
                 {this.props.user.type === 1
                   ? 'Close'
-                  : this.tender && this.tender.status === 1
+                  : tender && tender.status === 1
                     ? 'Update'
                     : 'Pich'}
               </div>
