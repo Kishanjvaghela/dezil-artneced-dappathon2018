@@ -20,7 +20,7 @@ class App extends Component {
     this.state = {
       storageValue: 0,
       web3: null,
-      currentScreen: 1
+      currentScreen: 2
     };
     this.renderMenu = this.renderMenu.bind(this);
     this.changeContainer = this.changeContainer.bind(this);
