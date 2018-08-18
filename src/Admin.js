@@ -1,5 +1,3 @@
-import { PerformanceObserver } from 'perf_hooks';
-
 //connect to the local host(gaancahe)
 var Web3 = require('web3');
 var web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
@@ -9,13 +7,24 @@ const bytecode = Tender.bytecode;
 const abi = Tender.abi;
 var tenderContract = web3.eth.contract(abi);
 
-const createTender = (tenderid, tendertype, filtertype, tenderamount) => {
+const createTender = (
+  tenderid,
+  title,
+  tenderCategory,
+  filtertype,
+  tenderamount,
+  desc,
+  duration
+) => {
   return new Promise((resolve, reject) => {
     var tender = tenderContract.new(
       tenderid,
-      tendertype,
+      title,
+      tenderCategory,
       filtertype,
       tenderamount,
+      desc,
+      duration,
       {
         from: web3.eth.accounts[0],
         data: bytecode,
