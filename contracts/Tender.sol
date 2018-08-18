@@ -26,6 +26,13 @@ contract Tender is Ownable{
 
     Contractor[] public bids;
 
+    struct Tender {
+        string status;
+        uint256 percent;
+        address verifier;
+    }
+
+    mapping (string => Tender) tenderStatus;
 
     /**
      * @dev Store the tender details during deployment
@@ -43,6 +50,7 @@ contract Tender is Ownable{
         tendertype = _tendertype;
         admin=msg.sender;
         filtertype = _filtertype;
+        tenderStatus[_tenderid] = Tender("assigned",0,msg.sender);
     }
 
 
@@ -62,7 +70,7 @@ contract Tender is Ownable{
      * @param _duration is the number of days to complete the project
     */
     function submitBid(uint256 _bidamount,string _contractid,string _tendertype,uint256 _bidswon,uint256 _duration) public returns (bool,string){
-        require(msg.sender != owner,"Owner should not be able to submit bid");
+        require(msg.sender != owner,"Owner cannot submit bid");
         bids.push(Contractor({contractor:msg.sender, bidamount:_bidamount,contractid:_contractid,tendertype:_tendertype,bidswon:_bidswon,duration:_duration}));
         return (true,"Bid submitted successfully");
     }
@@ -71,7 +79,7 @@ contract Tender is Ownable{
      * @dev reveals the winner of the tender by lowest amount
     */
     function revealbyAmount() public onlyOwner constant returns (string,address,uint256,uint){
-        // require(bids.length==0, "There are no bids submitted yet");
+        require(bids.length!=0, "There are no bids submitted yet");
         Contractor tempbid=bids[0];
         uint temp_amount =tempbid.bidamount;
         uint temp_index=0;
@@ -89,8 +97,8 @@ contract Tender is Ownable{
     /**
      * @dev reveals the winner of the tender by lowest duration
     */
-    function revealbyDuration() public onlyOwner constant returns (string,address,uint256,uint){
-        // require(bids.length==0, "There are no bids submitted yet");
+    function revealbyDuration()public onlyOwner constant returns (string,address,uint256,uint){
+        require(bids.length!=0, "There are no bids submitted yet");
         Contractor tempbid=bids[0];
         uint temp_amount =tempbid.duration;
         uint temp_index=0;
@@ -116,17 +124,24 @@ contract Tender is Ownable{
     /**
      * @dev getBids is to display the bid details of a contractor
     */
-    function getBids(uint i)public constant returns(address,string,string,uint256,uint,uint){
+    function getBids(uint i) public constant returns(address,string,string,uint256,uint,uint){
         return (bids[i].contractor,bids[i].contractid,bids[i].tendertype,bids[i].bidamount,bids[i].bidswon,bids[i].duration);
     }
 
     /**
      * @dev displays all details about the tender
     */
-    function getTenderDetails () public constant returns (string,uint256,string,address,string) {
+    function getTenderDetails ()public  constant returns (string,uint256,string,address,string) {
         return(tenderid,tenderAmount,tendertype,admin,filtertype);
     }
 
+    function updateStatus(string _tenderid,string tenderstatus, uint256 _percent,address verifier) public {
+        require(msg.sender != owner,"Owner cannot update status");
+        tenderStatus[_tenderid] = Tender(tenderstatus,_percent,verifier);
+    }
 
+    function getTenderStatus(string _tenderid) public constant returns(string,uint256,address) {
+        return (tenderStatus[_tenderid].status,tenderStatus[_tenderid].percent,tenderStatus[_tenderid].verifier);
+    }
 
 }
