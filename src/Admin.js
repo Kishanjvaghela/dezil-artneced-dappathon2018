@@ -1,3 +1,5 @@
+import { PerformanceObserver } from 'perf_hooks';
+
 //connect to the local host(gaancahe)
 var Web3 = require('web3');
 var web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
@@ -42,17 +44,47 @@ const createTender = (tenderid, tendertype, filtertype, tenderamount) => {
 const getTenderDetails = (tenderAddress) => {
   return new Promise((resolve, reject) => {
     let contractInstance = tenderContract.at(tenderAddress);
-    contractInstance.getTenderDetails({ from: web3.eth.accounts[0] }, function (err, data) {  // TODO :web3.eth.accounts[0] shoud be configurable
-      if(err) {
+    contractInstance.getTenderDetails({ from: web3.eth.accounts[0] }, function (err, data) {  // TODO :web3.eth.accounts[0] should be configurable
+      if (err) {
         return reject(err);
-      }else {
+      } else {
         return resolve(data)
       }
     })
   });
 };
 
-export { createTender,getTenderDetails };
+const closeTender = (tenderAddress) => {
+  return new Promise((resolve, reject) => {
+    let contractInstance = tenderContract.at(tenderAddress);
+    var filtertype;
+    contractInstance.getTenderDetails({ from: web3.eth.accounts[0] }, function (err, data) {
+      if (err) {
+        return reject(err)
+      } else {
+        if (filtertype === "amount") {
+          contractInstance.revealbyAmount({ from: web3.eth.accounts[0] }, function (err, data) {
+            if (err) {
+              return reject("There are no bids submitted yet")
+            } else {
+              return resolve(data)
+            }
+          })
+        } else {
+          contractInstance.revealbyDuration({ from: web3.eth.accounts[0] }, function (err, data) {
+            if (err) {
+              return reject("There are no bids submitted yet")
+            } else {
+              return resolve(data)
+            }
+          })
+        }
+      }
+    })
+  })
+}
+
+export { createTender, getTenderDetails, closeTender };
 
 
 
