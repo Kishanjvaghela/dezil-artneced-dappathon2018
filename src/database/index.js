@@ -1,3 +1,11 @@
+const loginUser = userId => {
+  localStorage.setItem('user', userId);
+};
+
+const getUser = () => {
+  localStorage.getItem('user');
+};
+
 const createTender = (tenderId, tender) => {
   const valueJSON = localStorage.getItem('tenders');
   try {
@@ -24,4 +32,4 @@ const getTenders = () => {
   return value;
 };
 
-export default { createTender, getTenders };
+export default { createTender, getTenders, getUser, loginUser };

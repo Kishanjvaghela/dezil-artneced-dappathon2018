@@ -21,11 +21,11 @@ const pieData = [
     label: 'Yellow'
   }
 ];
-const Dashboard = () => {
+const Dashboard = ({ user }) => {
   return (
     <div className="pure-g">
       <div className="pure-u-1-1">
-        <h1>Good to Go!</h1>
+        <h1>{'type' + user.type}</h1>
         <p>Your Truffle Box is installed and ready.</p>
         <div>
           <Pie data={pieData} />
