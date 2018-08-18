@@ -49,7 +49,13 @@ class Tenders extends Component {
       });
   };
 
-  updateStatusClick = address => {};
+  updateStatusClick = (address, tender) => {
+    updateStatus(address, tender.id, tender.status, '10', '0x1')
+      .then(() => {
+        alert('Seccess');
+      })
+      .catch(() => {});
+  };
 
   submitBidClick = address => {
     console.log('submit bid clicked');
@@ -108,12 +114,17 @@ class Tenders extends Component {
             <Button
               color="danger"
               onClick={() => {
-                console.log(tender);
+                const tenderLocal = this.state.tenders.find(
+                  k => k.tenderAddress === props.value
+                );
+                console.log(tenderLocal);
 
                 if (this.props.user.type === 1) {
                   this.closeTenderClick(props.value);
                 } else {
-                  if (tender && tender.state === 1) {
+                  if (tenderLocal && tender.state === 1) {
+                    this.submitBidClick(props.value);
+                  } else if (tender && tender.state === 2) {
                     this.updateStatusClick(props.value, tender);
                   } else {
                     this.submitBidClick(props.value);
@@ -124,7 +135,7 @@ class Tenders extends Component {
               <div>
                 {this.props.user.type === 1
                   ? 'Close'
-                  : tender && tender.status === 1
+                  : tender && tender.status === 2
                     ? 'Update'
                     : 'Pich'}
               </div>
@@ -210,7 +221,7 @@ class Tenders extends Component {
                       .then(data => {
                         const newBids = this.state.tenders.map(bid => {
                           if (bid.tenderAddress === address) {
-                            bid.status = 1;
+                            bid.status = 2;
                             alert(JSON.stringify(bid));
                           }
                           return bid;
