@@ -5,10 +5,12 @@ const Tender = require('../build/contracts/Tender.json');
 
 const bytecode = Tender.bytecode;
 const abi = Tender.abi;
+var tenderContract = web3.eth.contract(abi);
+
+
 
 const createTender = (tenderid, tendertype, filtertype, tenderamount) => {
   return new Promise((resolve, reject) => {
-    var tenderContract = web3.eth.contract(abi);
     var tender = tenderContract.new(
       tenderid,
       tendertype,
@@ -19,16 +21,16 @@ const createTender = (tenderid, tendertype, filtertype, tenderamount) => {
         data: bytecode,
         gas: '4700000'
       },
-      function(e, contract) {
+      function (e, contract) {
         if (e) {
           return reject(e);
         }
         if (typeof contract.address !== 'undefined') {
           console.log(
             'Contract mined! address: ' +
-              contract.address +
-              ' transactionHash: ' +
-              contract.transactionHash
+            contract.address +
+            ' transactionHash: ' +
+            contract.transactionHash
           );
           return resolve(contract.transactionHash);
         }
@@ -37,6 +39,20 @@ const createTender = (tenderid, tendertype, filtertype, tenderamount) => {
   });
 };
 
-export { createTender };
+const getTenderDetails = (tenderAddress) => {
+  return new Promise((resolve, reject) => {
+    let contractInstance = tenderContract.at(tenderAddress);
+    contractInstance.getTenderDetails({ from: web3.eth.accounts[0] }, function (err, data) {  // TODO :web3.eth.accounts[0] shoud be configurable
+      if(err) {
+        return reject(err);
+      }else {
+        return resolve(data)
+      }
+    })
+  });
+};
 
-// createTender("QT180000000014490","work","amount",100000000)
+export { createTender,getTenderDetails };
+
+
+
