@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { createTender } from '../../interact';
+import DataBase from '../../database';
 class CreateScreen extends Component {
   constructor(props) {
     super(props);
@@ -17,7 +18,10 @@ class CreateScreen extends Component {
     // alert(JSON.stringify(this.state));
     const { title, number, taxType, amount, filterType } = this.state;
     createTender(number, taxType, filterType, amount)
-      .then(data => alert(data))
+      .then(data => {
+        DataBase.createTender(number, data.address);
+        alert(data.txHash);
+      })
       .catch(e => alert(e.toString()));
   };
   render() {
