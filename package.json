@@ -51,6 +51,7 @@
   "dependencies": {
     "chart.js": "^1.1.1",
     "dotenv": "^2.0.0",
+    "firebase": "^5.4.0",
     "node-growl": "^0.1.1",
     "react": "^15.4.2",
     "react-chartjs": "^1.2.0",
