@@ -4,7 +4,7 @@ import ReactModal from 'react-modal';
 import { Button, Form, FormGroup, Label, Input } from 'reactstrap';
 import 'react-table/react-table.css';
 import DataBase from '../../database';
-import { getTenderDetails, closeTender } from '../../Admin';
+import { getTenderDetails, closeTender, updateStatus } from '../../Admin';
 import { submitBid } from '../../Agents';
 
 class Tenders extends Component {
@@ -48,6 +48,8 @@ class Tenders extends Component {
         alert(JSON.stringify(error));
       });
   };
+
+  updateStatusClick = address => {};
 
   submitBidClick = address => {
     console.log('submit bid clicked');
@@ -98,20 +100,37 @@ class Tenders extends Component {
       {
         Header: 'Action',
         accessor: 'tenderAddress',
-        Cell: props => (
-          <Button
-            color="danger"
-            onClick={() => {
-              if (this.props.user.type === 1) {
-                this.closeTenderClick(props.value);
-              } else {
-                this.submitBidClick(props.value);
-              }
-            }}
-          >
-            Pich
-          </Button>
-        )
+        Cell: props => {
+          const tender = this.state.tenders.find(
+            k => k.tenderAddress === props.value
+          );
+          return (
+            <Button
+              color="danger"
+              onClick={() => {
+                console.log(tender);
+
+                if (this.props.user.type === 1) {
+                  this.closeTenderClick(props.value);
+                } else {
+                  if (tender && tender.state === 1) {
+                    this.updateStatusClick(props.value, tender);
+                  } else {
+                    this.submitBidClick(props.value);
+                  }
+                }
+              }}
+            >
+              <div>
+                {this.props.user.type === 1
+                  ? 'Close'
+                  : this.tender && this.tender.status === 1
+                    ? 'Update'
+                    : 'Pich'}
+              </div>
+            </Button>
+          );
+        }
       }
     ];
     return (
@@ -180,7 +199,6 @@ class Tenders extends Component {
                   onClick={() => {
                     const { address, bidAmount, duration } = this.state;
                     console.log(this.props.user);
-
                     submitBid(
                       address,
                       parseInt(bidAmount),
@@ -190,7 +208,17 @@ class Tenders extends Component {
                       parseInt(duration)
                     )
                       .then(data => {
-                        this.setState({ show: false });
+                        const newBids = this.state.tenders.map(bid => {
+                          if (bid.tenderAddress === address) {
+                            bid.status = 1;
+                            alert(JSON.stringify(bid));
+                          }
+                          return bid;
+                        });
+                        this.setState({
+                          show: false,
+                          tenders: JSON.parse(JSON.stringify(newBids))
+                        });
                       })
                       .catch(error => {
                         alert(JSON.stringify(error));
