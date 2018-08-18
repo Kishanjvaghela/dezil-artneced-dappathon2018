@@ -31,20 +31,32 @@ class Tenders extends Component {
   render() {
     const columns = [
       {
-        Header: 'Tender ID',
-        accessor: 'tenderid'
+        Header: 'Tender title',
+        accessor: 'title'
       },
       {
         Header: 'Amount',
         accessor: 'tenderAmount'
       },
       {
-        Header: 'Type',
-        accessor: 'tendertype'
+        Header: 'Tender Category',
+        accessor: 'tenderCategory'
       },
       {
         Header: 'filtertype',
         accessor: 'filtertype'
+      },
+      {
+        Header: 'Desc',
+        accessor: 'desc'
+      },
+      {
+        Header: 'Amount',
+        accessor: 'tenderAmount'
+      },
+      {
+        Header: 'Duration (In month)',
+        accessor: 'duration'
       }
     ];
     return (

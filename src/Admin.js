@@ -53,21 +53,28 @@ const createTender = (
 
 const getTenderDetails = tenderAddress => {
   return new Promise((resolve, reject) => {
+    console.log(tenderAddress);
     let contractInstance = tenderContract.at(tenderAddress);
     contractInstance.getTenderDetails({ from: web3.eth.accounts[0] }, function(
       err,
       data
     ) {
       // TODO :web3.eth.accounts[0] shoud be configurable
+      console.log(data);
+      console.log(err);
+
       if (err) {
         return reject(err);
       } else {
         return resolve({
           tenderid: data[0],
-          tenderAmount: data[1].toNumber(),
-          tendertype: data[2],
-          admin: data[3],
-          filtertype: data[4]
+          title: data[1],
+          tenderCategory: data[2],
+          filtertype: data[3],
+          desc: data[4],
+          admin: data[5],
+          tenderAmount: data[6].toString(),
+          duration: data[7].toString()
         });
       }
     });
