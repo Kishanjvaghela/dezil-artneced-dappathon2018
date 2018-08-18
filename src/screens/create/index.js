@@ -1,25 +1,45 @@
 import React, { Component } from 'react';
-import { createTender } from '../../interact';
+import { Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
+import _ from 'lodash';
+import { createTender } from '../../Admin';
 import DataBase from '../../database';
 class CreateScreen extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
       title: '',
-      number: '',
-      taxType: '',
+      tenderCategory: '',
+      filterType: '',
       amount: '',
-      filterType: ''
+      desc: '',
+      duration: ''
     };
   }
 
-  createTender = () => {
+  createTender = event => {
+    event.preventDefault();
     // alert(JSON.stringify(this.state));
-    const { title, number, taxType, amount, filterType } = this.state;
-    createTender(number, taxType, filterType, amount)
+    const {
+      title,
+      tenderCategory,
+      amount,
+      filterType,
+      desc,
+      duration
+    } = this.state;
+    const tenderId = _.uniqueId() + new Date().getTime().toString();
+    // alert(JSON.stringify(this.state));
+    createTender(
+      tenderId,
+      title,
+      tenderCategory,
+      filterType,
+      parseInt(amount),
+      desc,
+      parseInt(duration)
+    )
       .then(data => {
-        DataBase.createTender(number, data.address);
+        DataBase.createTender(tenderId, data.address);
         alert(data.txHash);
       })
       .catch(e => alert(e.toString()));
@@ -28,43 +48,88 @@ class CreateScreen extends Component {
     return (
       <div className="pure-g">
         <div className="pure-u-1-1" style={{ flexDirection: 'column' }}>
-          <p>Title</p>
-          <input
-            value={this.state.title}
-            onChange={evt => {
-              return this.setState({ title: evt.target.value });
+          <Form
+            onSubmit={e => {
+              this.createTender(e);
             }}
-          />
-          <p>Number</p>
-          <input
-            value={this.state.number}
-            onChange={evt => {
-              return this.setState({ number: evt.target.value });
-            }}
-          />
-          <p>Taxation Type</p>
-          <input
-            value={this.state.taxType}
-            onChange={evt => {
-              return this.setState({ taxType: evt.target.value });
-            }}
-          />
-          <p>Amount</p>
-          <input
-            value={this.state.amount}
-            onChange={evt => {
-              return this.setState({ amount: evt.target.value });
-            }}
-          />
-          <p>Filter Type</p>
-          <input
-            value={this.state.filterType}
-            onChange={evt => {
-              return this.setState({ filterType: evt.target.value });
-            }}
-          />
-          <p />
-          <button onClick={this.createTender}>Create Tender</button>
+          >
+            <FormGroup>
+              <Label for="title">Title</Label>
+              <Input
+                id="title"
+                placeholder="Enter tender title"
+                value={this.state.title}
+                onChange={evt => {
+                  return this.setState({ title: evt.target.value });
+                }}
+              />
+            </FormGroup>
+            <FormGroup>
+              <Label for="tenderCategory">Tender Category</Label>
+              <Input
+                type="select"
+                name="select"
+                id="tenderCategory"
+                onChange={evt => {
+                  return this.setState({ tenderCategory: evt.target.value });
+                }}
+              >
+                <option>Manufacturing</option>
+                <option>IT service</option>
+                <option>Schools</option>
+                <option>Restaurant</option>
+                <option>Others</option>
+              </Input>
+            </FormGroup>
+            <FormGroup>
+              <Label for="tenderAmount">Amount</Label>
+              <Input
+                id="tenderAmount"
+                placeholder="Enter tender amount"
+                value={this.state.amount}
+                onChange={evt => {
+                  return this.setState({ amount: evt.target.value });
+                }}
+              />
+            </FormGroup>
+            <FormGroup>
+              <Label for="desc">Description</Label>
+              <Input
+                id="desc"
+                placeholder="Enter tender description"
+                value={this.state.desc}
+                onChange={evt => {
+                  return this.setState({ desc: evt.target.value });
+                }}
+              />
+            </FormGroup>
+            <FormGroup>
+              <Label for="desc">Duration</Label>
+              <Input
+                id="desc"
+                placeholder="Enter tender duration in month"
+                value={this.state.duration}
+                onChange={evt => {
+                  return this.setState({ duration: evt.target.value });
+                }}
+              />
+            </FormGroup>
+            <FormGroup>
+              <Label for="filterType">Filter Type</Label>
+              <Input
+                type="select"
+                name="select"
+                id="filterType"
+                onChange={evt => {
+                  return this.setState({ filterType: evt.target.value });
+                }}
+              >
+                <option>Amount</option>
+                <option>Duration</option>
+              </Input>
+            </FormGroup>
+            <Button>Create Tender</Button>
+          </Form>
         </div>
       </div>
     );
