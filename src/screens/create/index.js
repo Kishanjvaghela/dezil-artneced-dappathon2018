@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-
+import { createTender } from '../../interact';
 class CreateScreen extends Component {
   constructor(props) {
     super(props);
@@ -14,7 +14,11 @@ class CreateScreen extends Component {
   }
 
   createTender = () => {
-    alert(JSON.stringify(this.state));
+    // alert(JSON.stringify(this.state));
+    const { title, number, taxType, amount, filterType } = this.state;
+    createTender(number, taxType, filterType, amount)
+      .then(data => alert(data))
+      .catch(e => alert(e.toString()));
   };
   render() {
     return (
