@@ -6,10 +6,13 @@ contract Tender is Ownable{
 
     //Storage Variables
     string public tenderid;
+    string public title;
+    string public tenderCat;
+    string public filtertype;
+    string public desc;
     uint256 public tenderAmount;
-    string public tendertype;
+    uint256 public duration;
     address public admin;
-    string filtertype;
     address public winner;
     uint256 public winningbidamount;
     uint public count;
@@ -37,19 +40,28 @@ contract Tender is Ownable{
     /**
      * @dev Store the tender details during deployment
      * @param _tenderid is the unique id for this tenderid
-     * @param _tendertype is the name of the tender
+     * @param _title is title of the tender
+     * @param _tenderCat is the name of the tender
      * @param _filtertype is the filter for selecting contractor based on the filter
      * @param _tenderAmount is the amount allocated for this tender
+     * @param _desc is the desription of the tender
+     * @param _duration of the tender
     */
     constructor(string _tenderid,
-                string _tendertype,
+                string _title,
+                string _tenderCat,
                 string _filtertype,
-                uint256 _tenderAmount) {
+                uint256 _tenderAmount,
+                string _desc,
+                uint256 _duration) {
         tenderid = _tenderid;
-        tenderAmount=_tenderAmount ;
-        tendertype = _tendertype;
-        admin=msg.sender;
+        title = _title;
+        tenderCat = _tenderCat;
         filtertype = _filtertype;
+        desc = _desc;
+        admin=msg.sender;
+        tenderAmount=_tenderAmount;
+        duration= _duration;
         tenderStatus[_tenderid] = Tender("assigned",0,msg.sender);
     }
 
@@ -57,7 +69,7 @@ contract Tender is Ownable{
     /**
      * @dev get the address of the tender creator
     */
-    function getAdminAddress() public constant returns (address) {
+    function getAdminAddress() constant returns (address) {
         return msg.sender;
     }
 
@@ -69,8 +81,8 @@ contract Tender is Ownable{
      * @param _bidswon total bids won by this contractor in the past
      * @param _duration is the number of days to complete the project
     */
-    function submitBid(uint256 _bidamount,string _contractid,string _tendertype,uint256 _bidswon,uint256 _duration) public returns (bool,string){
-        require(msg.sender != owner,"Owner cannot submit bid");
+    function submitBid(uint256 _bidamount,string _contractid,string _tendertype,uint256 _bidswon,uint256 _duration) returns (bool,string){
+        require(msg.sender != owner,"Owner should not be able to submit bid");
         bids.push(Contractor({contractor:msg.sender, bidamount:_bidamount,contractid:_contractid,tendertype:_tendertype,bidswon:_bidswon,duration:_duration}));
         return (true,"Bid submitted successfully");
     }
@@ -78,7 +90,7 @@ contract Tender is Ownable{
     /**
      * @dev reveals the winner of the tender by lowest amount
     */
-    function revealbyAmount() public onlyOwner constant returns (string,address,uint256,uint){
+    function revealbyAmount() onlyOwner constant returns (string,address,uint256,uint){
         require(bids.length!=0, "There are no bids submitted yet");
         Contractor tempbid=bids[0];
         uint temp_amount =tempbid.bidamount;
@@ -97,7 +109,7 @@ contract Tender is Ownable{
     /**
      * @dev reveals the winner of the tender by lowest duration
     */
-    function revealbyDuration()public onlyOwner constant returns (string,address,uint256,uint){
+    function revealbyDuration() onlyOwner constant returns (string,address,uint256,uint){
         require(bids.length!=0, "There are no bids submitted yet");
         Contractor tempbid=bids[0];
         uint temp_amount =tempbid.duration;
@@ -124,19 +136,18 @@ contract Tender is Ownable{
     /**
      * @dev getBids is to display the bid details of a contractor
     */
-    function getBids(uint i) public constant returns(address,string,string,uint256,uint,uint){
+    function getBids(uint i) constant returns(address,string,string,uint256,uint,uint){
         return (bids[i].contractor,bids[i].contractid,bids[i].tendertype,bids[i].bidamount,bids[i].bidswon,bids[i].duration);
     }
 
     /**
      * @dev displays all details about the tender
     */
-    function getTenderDetails ()public  constant returns (string,uint256,string,address,string) {
-        return(tenderid,tenderAmount,tendertype,admin,filtertype);
+    function getTenderDetails () constant returns (string,string,string,string,string,address,uint256,uint256) {
+        return(tenderid,title,tenderCat,filtertype,desc,admin,tenderAmount,duration);
     }
 
-    function updateStatus(string _tenderid,string tenderstatus, uint256 _percent,address verifier) public {
-        require(msg.sender != owner,"Owner cannot update status");
+    function updateStatus(string _tenderid,string tenderstatus, uint256 _percent,address verifier) {
         tenderStatus[_tenderid] = Tender(tenderstatus,_percent,verifier);
     }
 
