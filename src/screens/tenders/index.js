@@ -58,6 +58,7 @@ class Tenders extends Component {
 
     closeTender(address)
       .then(data => {
+        this.handleClose();
         alert('Success');
       })
       .catch(error => {
@@ -78,7 +79,12 @@ class Tenders extends Component {
     this.setState({ show: true, address });
   };
   handleClose = () => {
-    this.setState({ show: false, viewTender: null, address: '' });
+    this.setState({
+      show: false,
+      viewTender: null,
+      address: '',
+      tenderAddress: ''
+    });
   };
 
   renderAlert() {
@@ -102,13 +108,46 @@ class Tenders extends Component {
       .then(data => {
         // alert(JSON.stringify(data));
         console.log(data);
-        this.setState({ viewTender: data });
+        this.setState({
+          viewTender: data,
+          tenderAddress: tender.tenderAddress
+        });
       })
       .catch(error => {
         console.log(error);
       });
   };
 
+  renderContractor = contractors => {
+    return (
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell>Id</TableCell>
+            <TableCell>Tender Type</TableCell>
+            <TableCell>Bid Amount</TableCell>
+            <TableCell>Bids Won</TableCell>
+            <TableCell>Duration</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {contractors.map(row => {
+            return (
+              <TableRow key={row.contractid}>
+                <TableCell component="th" scope="row">
+                  {row.contractid}
+                </TableCell>
+                <TableCell>{row.tendertype.toString()}</TableCell>
+                <TableCell>{row.bidamount.toString()}</TableCell>
+                <TableCell>{row.bidswon.toString()}</TableCell>
+                <TableCell>{row.duration.toString()}</TableCell>
+              </TableRow>
+            );
+          })}
+        </TableBody>
+      </Table>
+    );
+  };
   viewTender = () => {
     const { viewTender } = this.state;
     return (
@@ -124,76 +163,29 @@ class Tenders extends Component {
         }}
         onClose={this.handleClose}
       >
-        <Form
+        <div
           style={{
             backgroundColor: 'white',
             padding: 10,
             alignSelf: 'center'
           }}
         >
-          <FormGroup>
-            <Label for="tenderAmount">Amount</Label>
-            <Input
-              id="tenderAmount"
-              placeholder="Enter tender amount"
-              value={this.state.bidAmount}
-              onChange={evt => {
-                return this.setState({ bidAmount: evt.target.value });
+          {this.state.viewTender &&
+            this.renderContractor(this.state.viewTender)}
+
+          <div style={{ margin: 10 }}>
+            <Button
+              style={{ marginRight: 10 }}
+              onClick={() => {
+                const { tenderAddress } = this.state;
+                this.closeTenderClick(tenderAddress);
               }}
-            />
-          </FormGroup>
-          <FormGroup>
-            <Label for="desc">Duration</Label>
-            <Input
-              id="desc"
-              placeholder="Enter tender duration in month"
-              value={this.state.duration}
-              onChange={evt => {
-                return this.setState({ duration: evt.target.value });
-              }}
-            />
-          </FormGroup>
-          <Button
-            onClick={() => {
-              const { address, bidAmount, duration } = this.state;
-              console.log(this.props.user);
-              submitBid(
-                address,
-                parseInt(bidAmount),
-                this.props.user.userId,
-                'tendertype',
-                10,
-                parseInt(duration)
-              )
-                .then(data => {
-                  const newBids = this.state.tenders.map(bid => {
-                    if (bid.tenderAddress === address) {
-                      bid.status = 2;
-                      alert(JSON.stringify(bid));
-                    }
-                    return bid;
-                  });
-                  this.setState({
-                    show: false,
-                    tenders: JSON.parse(JSON.stringify(newBids))
-                  });
-                })
-                .catch(error => {
-                  alert(JSON.stringify(error));
-                });
-            }}
-          >
-            Close Tender
-          </Button>{' '}
-          {'    '}
-          <Button
-            onClick={() => {
-              this.setState({ show: false, viewTender: null });
-            }}
-          >
-            Cancel
-          </Button>
-        </Form>
+            >
+              Finalize
+            </Button>
+            <Button onClick={this.handleClose}>Close</Button>
+          </div>
+        </div>
       </Modal>
     );
   };
@@ -322,14 +314,15 @@ class Tenders extends Component {
                           color="danger"
                           onClick={() => {
                             if (this.props.user.type === 1) {
-                              this.closeTenderClick(row.tenderAddress);
+                              // this.closeTenderClick(row.tenderAddress);
+                              this.getDetails(row);
                             } else {
                               this.submitBidClick(row.tenderAddress);
                             }
                           }}
                         >
                           <div>
-                            {this.props.user.type === 1 ? 'Close' : 'Pitch'}
+                            {this.props.user.type === 1 ? 'View' : 'Pitch'}
                           </div>
                         </Button>
                       </TableCell>

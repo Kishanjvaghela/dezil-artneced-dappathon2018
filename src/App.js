@@ -65,6 +65,10 @@ class App extends Component {
 
   renderContrainer() {
     const { currentScreen, user } = this.state;
+    // alert(JSON.stringify(user));
+    console.log(currentScreen);
+    console.log(user);
+
     if (user) {
       if (user.type === 1) {
         switch (currentScreen) {

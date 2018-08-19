@@ -98,7 +98,14 @@ const getBidDetails = tenderAddress => {
               from: web3.eth.accounts[0],
               gas: '4700000'
             });
-            result.push(data);
+            result.push({
+              contractor: data[0],
+              contractid: data[1],
+              tendertype: data[2],
+              bidamount: data[3],
+              bidswon: data[4],
+              duration: data[5]
+            });
           }
           resolve(result);
         }
