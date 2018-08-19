@@ -30,16 +30,16 @@ const createTender = (
         data: bytecode,
         gas: '4700000'
       },
-      function(e, contract) {
+      function (e, contract) {
         if (e) {
           return reject(e);
         }
         if (typeof contract.address !== 'undefined') {
           console.log(
             'Contract mined! address: ' +
-              contract.address +
-              ' transactionHash: ' +
-              contract.transactionHash
+            contract.address +
+            ' transactionHash: ' +
+            contract.transactionHash
           );
           return resolve({
             address: contract.address,
@@ -54,7 +54,7 @@ const createTender = (
 const getTenderDetails = tenderAddress => {
   return new Promise((resolve, reject) => {
     let contractInstance = tenderContract.at(tenderAddress);
-    contractInstance.getTenderDetails({ from: web3.eth.accounts[0] }, function(
+    contractInstance.getTenderDetails({ from: web3.eth.accounts[0] }, function (
       err,
       data
     ) {
@@ -74,11 +74,33 @@ const getTenderDetails = tenderAddress => {
   });
 };
 
+const getBidDetails = (tenderAddress) => {
+  return new Promise((resolve, reject) => {
+    let contractInstance = tenderContract.at(tenderAddress);
+    contractInstance.bidlength({ from: web3.eth.accounts[0], gas: '4700000' }, function (err, data) {
+      if (err) {
+        reject(err)
+      } else {
+        length = data.toNumber();
+        for (i = 0; i < length; i++) {
+          contractInstance.getBids(i, { from: web3.eth.accounts[0], gas: '4700000' }, function (err, data) {
+            if (err) {
+              reject(err)
+            } else {
+              resolve(data)
+            }
+          })
+        }
+      }
+    })
+  });
+};
+
 const closeTender = tenderAddress => {
   return new Promise((resolve, reject) => {
     let contractInstance = tenderContract.at(tenderAddress);
     var filtertype;
-    contractInstance.getTenderDetails({ from: web3.eth.accounts[0] }, function(
+    contractInstance.getTenderDetails({ from: web3.eth.accounts[0] }, function (
       err,
       data
     ) {
@@ -88,7 +110,7 @@ const closeTender = tenderAddress => {
         if (filtertype === 'amount') {
           contractInstance.revealbyAmount(
             { from: web3.eth.accounts[0] },
-            function(err, data) {
+            function (err, data) {
               if (err) {
                 return reject('There are no bids submitted yet');
               } else {
@@ -99,7 +121,7 @@ const closeTender = tenderAddress => {
         } else {
           contractInstance.revealbyDuration(
             { from: web3.eth.accounts[0] },
-            function(err, data) {
+            function (err, data) {
               if (err) {
                 return reject('There are no bids submitted yet');
               } else {
@@ -113,4 +135,6 @@ const closeTender = tenderAddress => {
   });
 };
 
-export { createTender, getTenderDetails, closeTender };
+
+
+export { createTender, getTenderDetails, getBidDetails, closeTender };
