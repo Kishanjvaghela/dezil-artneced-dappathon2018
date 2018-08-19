@@ -106,37 +106,6 @@ class Tenders extends Component {
       {
         Header: 'Duration (In month)',
         accessor: 'duration'
-      },
-      {
-        Header: 'Action',
-        accessor: 'tenderAddress',
-        Cell: props => {
-          const tender = this.state.tenders.find(
-            k => k.tenderAddress === props.value
-          );
-          if (tender && tender.state === 2) {
-            return <div />;
-          } else {
-            return (
-              <Button
-                color="danger"
-                onClick={() => {
-                  const tenderLocal = this.state.tenders.find(
-                    k => k.tenderAddress === props.value
-                  );
-                  console.log(tenderLocal);
-                  if (this.props.user.type === 1) {
-                    this.closeTenderClick(props.value);
-                  } else {
-                    this.submitBidClick(props.value);
-                  }
-                }}
-              >
-                <div>{this.props.user.type === 1 ? 'Close' : 'Pitch'}</div>
-              </Button>
-            );
-          }
-        }
       }
     ];
 

@@ -66,19 +66,34 @@ class App extends Component {
   renderContrainer() {
     const { currentScreen, user } = this.state;
     if (user) {
-      switch (currentScreen) {
-        case -1:
-          return <Dashboard user={user} />;
-        case 0:
-          return <CreateScreen />;
-        case 1:
-          return <TendersScreen user={user} />;
-        case 2:
-          return <ClosedTenderScreen user={user} />;
-        case 3:
-          return <PorfileScreen />;
-        default:
-          return <Dashboard />;
+      if (user.type === 1) {
+        switch (currentScreen) {
+          case -1:
+            return <Dashboard user={user} />;
+          case 0:
+            return <CreateScreen />;
+          case 1:
+            return <TendersScreen user={user} />;
+          case 2:
+            return <ClosedTenderScreen user={user} />;
+          case 3:
+            return <PorfileScreen />;
+          default:
+            return <Dashboard />;
+        }
+      } else {
+        switch (currentScreen) {
+          case -1:
+            return <Dashboard user={user} />;
+          case 0:
+            return <TendersScreen user={user} />;
+          case 1:
+            return <ClosedTenderScreen user={user} />;
+          case 2:
+            return <PorfileScreen />;
+          default:
+            return <Dashboard />;
+        }
       }
     } else {
       return (
@@ -148,7 +163,7 @@ class App extends Component {
                     value={this.state.currentScreen}
                     onChange={this.handleChange}
                   >
-                    <Tab label="Create" />
+                    {user.type === 1 && <Tab label="Create" />}
                     <Tab label="Tenders" />
                     <Tab label="Closed" />
                   </Tabs>
