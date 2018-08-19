@@ -9,6 +9,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Divider from '@material-ui/core/Divider';
 import { Pie } from 'react-chartjs';
+import TendersScreen from '../tenders';
 
 const pieData = [
   {
@@ -118,22 +119,7 @@ const Dashboard = ({ user }) => {
             </Typography>
             <CardContent>
               <div>
-                <List component="nav">
-                  <ListItem button>
-                    <ListItemText primary="ABC Industries" />
-                  </ListItem>
-                  <Divider />
-                  <ListItem button divider>
-                    <ListItemText primary="XUZ School" />
-                  </ListItem>
-                  <ListItem button>
-                    <ListItemText primary="TYC Industries" />
-                  </ListItem>
-                  <Divider light />
-                  <ListItem button>
-                    <ListItemText primary="Road maker" />
-                  </ListItem>
-                </List>
+                <TendersScreen user={user} dashboard={true} />
               </div>
             </CardContent>
           </Card>

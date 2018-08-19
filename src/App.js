@@ -74,7 +74,7 @@ class App extends Component {
         case 1:
           return <TendersScreen user={user} />;
         case 2:
-          return <ClosedTenderScreen />;
+          return <ClosedTenderScreen user={user} />;
         case 3:
           return <PorfileScreen />;
         default:
