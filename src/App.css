@@ -15,13 +15,14 @@ code {
   display: block;
   margin: 20px 0 15px 0;
   padding: 10px;
-  background: #eee;
+  background-color: #eeeeee;
 }
 
 .container {
   box-sizing: border-box;
   width: 100%;
   padding: 80px 20px;
+  background-color: '#EEEEEE';
 }
 
 .pure-button-primary {

@@ -34,7 +34,7 @@ class App extends Component {
       user: '',
       storageValue: 0,
       web3: null,
-      currentScreen: 2,
+      currentScreen: -1,
       anchorEl: null
     };
     this.renderMenu = this.renderMenu.bind(this);
@@ -135,7 +135,7 @@ class App extends Component {
               justifyContent: 'space-between'
             }}
           >
-            {this.renderMenu('Truffle Box Admin', 1)}
+            {this.renderMenu('Dezil-artneced', 1)}
             <div>
               {user && (
                 <div
