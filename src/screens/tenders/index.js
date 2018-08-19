@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
 import ReactTable from 'react-table';
+import Card from '@material-ui/core/Card';
+import Typography from '@material-ui/core/Typography';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
 import Modal from '@material-ui/core/Modal';
 import { Button, Form, FormGroup, Label, Input } from 'reactstrap';
 import 'react-table/react-table.css';
@@ -246,7 +250,11 @@ class Tenders extends Component {
               </Form>
             </Modal>
           </div>
-          <ReactTable data={this.state.tenders} columns={columns} />
+          <Card width="50px">
+            <CardContent>
+              <ReactTable data={this.state.tenders} columns={columns} />
+            </CardContent>
+          </Card>
         </div>
       </div>
     );

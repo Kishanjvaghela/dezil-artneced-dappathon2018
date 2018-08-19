@@ -126,7 +126,7 @@ class App extends Component {
     const { auth, anchorEl } = this.state;
     const open = Boolean(anchorEl);
     return (
-      <div className="App">
+      <div class="bg">
         <AppBar>
           <Toolbar
             style={{

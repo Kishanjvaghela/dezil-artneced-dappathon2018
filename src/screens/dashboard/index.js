@@ -68,7 +68,7 @@ const Dashboard = ({ user }) => {
     <div className="pure-g">
       <div className="pure-u-1-1">
         <h1>Dezil-artneced tender system</h1>
-        <p>Your Truffle Box is installed and ready.</p>
+        <p>Transparent Trust and Secure system</p>
         <div>
           <Card width="50px">
             <div
@@ -86,7 +86,10 @@ const Dashboard = ({ user }) => {
                 Tenders Open
               </Typography>
               <CardContent>
-                <Pie data={pieData} width={250} height={250} />
+                <img
+                  style={{ width: 250, height: 250 }}
+                  src={require('../../../chart1.jpg')}
+                />
               </CardContent>
               <Typography
                 gutterBottom
@@ -97,7 +100,10 @@ const Dashboard = ({ user }) => {
                 Tenders Closed
               </Typography>
               <CardContent>
-                <Pie data={closedData} width={250} height={250} />
+                <img
+                  style={{ width: 250, height: 250 }}
+                  src={require('../../../chart2.jpg')}
+                />
               </CardContent>
             </div>
           </Card>

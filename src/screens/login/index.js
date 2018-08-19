@@ -59,8 +59,16 @@ class LoginScreen extends Component {
 
   render() {
     return (
-      <div>
-        <Card width="50px">
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          flex: 1,
+          marginTop: 20
+        }}
+      >
+        <Card style={{ width: 300 }}>
           <CardMedia
             image="/static/images/cards/contemplative-reptile.jpg"
             title="Contemplative Reptile"

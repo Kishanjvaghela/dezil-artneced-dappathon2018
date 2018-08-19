@@ -2,5 +2,24 @@ body {
   margin: 0;
   padding: 0;
   font-family: sans-serif;
-  background-color: #eeeeee;
+  background-color: red !important;
+  height: 100% !important;
+  margin: 0;
+}
+html {
+  height: 100%;
+  margin: 0;
+}
+.bg {
+  /* The image used */
+  /* background-image: url("img_girl.jpg"); */
+  background-color: 'black';
+
+  /* Full height */
+  height: 100%;
+
+  /* Center and scale the image nicely */
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
