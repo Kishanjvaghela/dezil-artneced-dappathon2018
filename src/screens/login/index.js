@@ -1,14 +1,11 @@
 import React, { Component } from 'react';
-import {
-  Button,
-  Card,
-  CardBody,
-  CardTitle,
-  Dropdown,
-  DropdownMenu,
-  DropdownToggle,
-  DropdownItem
-} from 'reactstrap';
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import CardMedia from '@material-ui/core/CardMedia';
+import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
+import TextField from '@material-ui/core/TextField';
 import firebase from 'firebase';
 import DataBase from '../../database';
 
@@ -59,58 +56,131 @@ class LoginScreen extends Component {
         console.log(error);
       });
   };
+
   render() {
     return (
-      <Card>
-        <CardBody>
-          <CardTitle>Email</CardTitle>
-          <input
-            value={this.state.email}
-            onChange={evt => {
-              return this.setState({ email: evt.target.value });
-            }}
+      <div>
+        <Card width="50px">
+          <CardMedia
+            image="/static/images/cards/contemplative-reptile.jpg"
+            title="Contemplative Reptile"
           />
-          <CardTitle>Password</CardTitle>
-          <input
-            value={this.state.password}
-            onChange={evt => {
-              return this.setState({ password: evt.target.value });
-            }}
-          />
-        </CardBody>
-        <CardBody>
-          <Dropdown
-            group
-            isOpen={this.state.dropdownOpen}
-            size="sm"
-            toggle={() => {
-              this.setState({ dropdownOpen: !this.state.dropdownOpen });
-            }}
-          >
-            <DropdownToggle caret>
-              {this.state.type === 1 ? 'Admin' : 'Conractor'}
-            </DropdownToggle>
-            <DropdownMenu>
-              <DropdownItem
-                onClick={() => this.setState({ type: 1, dropdownOpen: false })}
+          <CardContent>
+            <Typography
+              gutterBottom
+              variant="headline"
+              component="h2"
+              style={{ textAlign: 'center' }}
+            >
+              LOGIN
+            </Typography>
+            <Typography component="p" style={{ textAlign: 'center' }}>
+              Loign our system for load with boakchin
+            </Typography>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginTop: 20,
+                flexDirection: 'column'
+              }}
+            >
+              <TextField
+                id="name"
+                label="Email"
+                value={this.state.email}
+                onChange={evt => {
+                  return this.setState({ email: evt.target.value });
+                }}
+                margin="normal"
+              />
+              <br />
+              <TextField
+                id="name"
+                label="Password"
+                type="password"
+                value={this.state.password}
+                onChange={evt => {
+                  return this.setState({ password: evt.target.value });
+                }}
+                margin="normal"
+              />
+              <br />
+              <Button
+                variant="contained"
+                size="small"
+                color="primary"
+                onClick={this.loginUser}
               >
-                Admin
-              </DropdownItem>
-              <DropdownItem
-                onClick={() => this.setState({ type: 2, dropdownOpen: false })}
-              >
-                Conractor
-              </DropdownItem>
-            </DropdownMenu>
-          </Dropdown>
-        </CardBody>
-        <CardBody>
-          <Button color="danger" onClick={this.loginUser}>
-            Login
-          </Button>
-        </CardBody>
-      </Card>
+                Login
+              </Button>
+            </div>
+          </CardContent>
+          <CardActions>
+            <Button size="small" color="primary">
+              Sign Up
+            </Button>
+            <Button size="small" color="primary">
+              Forgot password
+            </Button>
+          </CardActions>
+        </Card>
+      </div>
     );
   }
+  // render() {
+  //   return (
+  //     <Card>
+  //       <CardBody>
+  //         <CardTitle>Email</CardTitle>
+  //         <input
+  //           value={this.state.email}
+  //           onChange={evt => {
+  //             return this.setState({ email: evt.target.value });
+  //           }}
+  //         />
+  //         <CardTitle>Password</CardTitle>
+  //         <input
+  //           value={this.state.password}
+  //           onChange={evt => {
+  //             return this.setState({ password: evt.target.value });
+  //           }}
+  //         />
+  //       </CardBody>
+  //       <CardBody>
+  //         <Dropdown
+  //           group
+  //           isOpen={this.state.dropdownOpen}
+  //           size="sm"
+  //           toggle={() => {
+  //             this.setState({ dropdownOpen: !this.state.dropdownOpen });
+  //           }}
+  //         >
+  //           <DropdownToggle caret>
+  //             {this.state.type === 1 ? 'Admin' : 'Conractor'}
+  //           </DropdownToggle>
+  //           <DropdownMenu>
+  //             <DropdownItem
+  //               onClick={() => this.setState({ type: 1, dropdownOpen: false })}
+  //             >
+  //               Admin
+  //             </DropdownItem>
+  //             <DropdownItem
+  //               onClick={() => this.setState({ type: 2, dropdownOpen: false })}
+  //             >
+  //               Conractor
+  //             </DropdownItem>
+  //           </DropdownMenu>
+  //         </Dropdown>
+  //       </CardBody>
+  //       <CardBody>
+  //         <Button color="danger" onClick={this.loginUser}>
+  //           Login
+  //         </Button>
+  //       </CardBody>
+  //     </Card>
+  //   );
+  // }
 }
 export default LoginScreen;

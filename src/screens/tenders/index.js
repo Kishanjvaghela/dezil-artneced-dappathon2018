@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import ReactTable from 'react-table';
-import ReactModal from 'react-modal';
+import Modal from '@material-ui/core/Modal';
 import { Button, Form, FormGroup, Label, Input } from 'reactstrap';
 import 'react-table/react-table.css';
 import DataBase from '../../database';
@@ -144,46 +144,43 @@ class Tenders extends Component {
         }
       }
     ];
+
+    function rand() {
+      return Math.round(Math.random() * 20) - 10;
+    }
+
+    function getModalStyle() {
+      const top = 50 + rand();
+      const left = 50 + rand();
+
+      return {
+        top: `${top}%`,
+        left: `${left}%`,
+        transform: `translate(-${top}%, -${left}%)`
+      };
+    }
     return (
       <div className="pure-g">
         <div className="pure-u-1-1">
           <h1>Tenders</h1>
           <div>
-            <ReactModal isOpen={this.state.show}>
-              <Form>
-                <FormGroup>
-                  <Label for="title">Title</Label>
-                  <Input
-                    disabled
-                    id="title"
-                    placeholder="Enter tender title"
-                    value={this.state.title}
-                  />
-                </FormGroup>
-                <FormGroup>
-                  <Label for="tenderCategory">Tender Category</Label>
-                  <Input
-                    disabled
-                    type="select"
-                    name="select"
-                    id="tenderCategory"
-                  >
-                    <option>Manufacturing</option>
-                    <option>IT service</option>
-                    <option>Schools</option>
-                    <option>Restaurant</option>
-                    <option>Others</option>
-                  </Input>
-                </FormGroup>
-                <FormGroup>
-                  <Label for="desc">Description</Label>
-                  <Input
-                    disabled
-                    id="desc"
-                    placeholder="Enter tender description"
-                    value={this.state.desc}
-                  />
-                </FormGroup>
+            <Modal
+              aria-labelledby="simple-modal-title"
+              aria-describedby="simple-modal-description"
+              open={this.state.show}
+              style={{
+                margin: 250,
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}
+            >
+              <Form
+                style={{
+                  backgroundColor: 'white',
+                  padding: 10,
+                  alignSelf: 'center'
+                }}
+              >
                 <FormGroup>
                   <Label for="tenderAmount">Amount</Label>
                   <Input
@@ -247,7 +244,7 @@ class Tenders extends Component {
                   Close
                 </Button>
               </Form>
-            </ReactModal>
+            </Modal>
           </div>
           <ReactTable data={this.state.tenders} columns={columns} />
         </div>

@@ -1,5 +1,15 @@
 import React, { Component } from 'react';
 import firebase from 'firebase';
+import { withStyles } from '@material-ui/core/styles';
+import AppBar from '@material-ui/core/AppBar';
+import Button from '@material-ui/core/Button';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import Toolbar from '@material-ui/core/Toolbar';
+import IconButton from '@material-ui/core/IconButton';
+import AccountCircle from '@material-ui/icons/AccountCircle';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 
 import getWeb3 from './utils/getWeb3';
 
@@ -24,7 +34,8 @@ class App extends Component {
       user: '',
       storageValue: 0,
       web3: null,
-      currentScreen: 2
+      currentScreen: 2,
+      anchorEl: null
     };
     this.renderMenu = this.renderMenu.bind(this);
     this.changeContainer = this.changeContainer.bind(this);
@@ -46,22 +57,25 @@ class App extends Component {
   }
 
   componentDidMount() {
-    this.setState({ user: JSON.parse(DataBase.getUser()) });
+    const userJSON = DataBase.getUser();
+    if (userJSON) {
+      this.setState({ user: JSON.parse(userJSON) });
+    }
   }
 
   renderContrainer() {
     const { currentScreen, user } = this.state;
     if (user) {
       switch (currentScreen) {
-        case 1:
+        case -1:
           return <Dashboard user={user} />;
-        case 2:
+        case 0:
           return <CreateScreen />;
-        case 3:
+        case 1:
           return <TendersScreen user={user} />;
-        case 4:
+        case 2:
           return <ClosedTenderScreen />;
-        case 5:
+        case 3:
           return <PorfileScreen />;
         default:
           return <Dashboard />;
@@ -84,30 +98,99 @@ class App extends Component {
 
   renderMenu = (title, index, action) => {
     return (
-      <a
-        href="#"
-        className="pure-menu-heading pure-menu-link"
-        onClick={() => {
-          if (action) {
-            action();
-          } else {
-            this.changeContainer(index);
-          }
-        }}
-      >
-        {title}
-      </a>
+      <div>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => {
+            this.changeContainer(-1);
+            this.setState({ currentScreen: -1 });
+          }}
+        >
+          {title}
+        </Button>
+      </div>
     );
   };
-
+  handleChange = (event, value) => {
+    this.setState({ currentScreen: value });
+  };
+  handleMenu = event => {
+    this.setState({ anchorEl: event.currentTarget });
+  };
+  handleClose = () => {
+    this.setState({ anchorEl: null });
+  };
   render() {
     const { user } = this.state;
+    const { auth, anchorEl } = this.state;
+    const open = Boolean(anchorEl);
     return (
       <div className="App">
-        <nav className="navbar pure-menu pure-menu-horizontal">
-          {this.renderMenu('Truffle Box Admin', 1)}
-          <a href="#" className="pure-menu-heading pure-menu-link" />
-          {user && (
+        <AppBar>
+          <Toolbar
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'space-between'
+            }}
+          >
+            {this.renderMenu('Truffle Box Admin', 1)}
+            <div>
+              {user && (
+                <div
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'row'
+                  }}
+                >
+                  <Tabs
+                    value={this.state.currentScreen}
+                    onChange={this.handleChange}
+                  >
+                    <Tab label="Create" />
+                    <Tab label="Tenders" />
+                    <Tab label="Closed" />
+                  </Tabs>
+                  <div>
+                    <IconButton
+                      aria-owns={open ? 'menu-appbar' : null}
+                      aria-haspopup="true"
+                      onClick={this.handleMenu}
+                      color="inherit"
+                    >
+                      <AccountCircle />
+                    </IconButton>
+                    <Menu
+                      id="menu-appbar"
+                      anchorEl={anchorEl}
+                      anchorOrigin={{
+                        vertical: 'top',
+                        horizontal: 'right'
+                      }}
+                      transformOrigin={{
+                        vertical: 'top',
+                        horizontal: 'right'
+                      }}
+                      open={open}
+                      onClose={this.handleClose}
+                    >
+                      <MenuItem onClick={() => {}}>Profile</MenuItem>
+                      <MenuItem
+                        onClick={() => {
+                          this.setState({ user: '', anchorEl: null });
+                          DataBase.loginUser('');
+                          firebase.auth().signOut();
+                        }}
+                      >
+                        Logout
+                      </MenuItem>
+                    </Menu>
+                  </div>
+                </div>
+              )}
+            </div>
+            {/* {user && (
             <div className="navbar-right">
               {user.type === 1 && this.renderMenu('Create', 2)}
               {this.renderMenu('Tenders', 3)}
@@ -118,13 +201,13 @@ class App extends Component {
                 firebase.auth().signOut();
               })}
             </div>
-          )}
-        </nav>
-
+          )} */}
+          </Toolbar>
+        </AppBar>
         <main className="container">{this.renderContrainer()}</main>
       </div>
     );
   }
 }
 
-export default App;
+export default withStyles({})(App);
