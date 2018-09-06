@@ -57,7 +57,7 @@ truffle console
 Interact using Web3.js
 npm run start
 ```
-##Inadequacy in the System
+## Inadequacy in the System
 1. Selection algorithm for the winner is not perfect.
 2. Initial adoption of the system might be slow.
 
